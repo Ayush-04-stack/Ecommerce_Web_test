@@ -5,7 +5,7 @@ function Products({ SearchQuery }) {
     const [products, setProducts] = useState([]);
 
     async function getProducts() {
-        let data = await fetch("https://ecommerce-backend-test-5mq0.onrender.com/");
+        let data = await fetch("https://ecommerce-backend-test-npre.onrender.com/");//https://ecommerce-backend-test-npre.onrender.com/
         data = await data.json();
         setProducts(data);
     }
