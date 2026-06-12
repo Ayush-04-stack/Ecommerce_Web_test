@@ -60,7 +60,7 @@ function Header({ setSearchQuery }) {
                     Contact Us
                 </Link>
 
-                <Link style={{ textDecoration: "none", color: "red" }} to="/login">
+                <Link style={{ textDecoration: "none", color: "red" }} to="/auth/login">
                     Login
                 </Link>
             </nav>

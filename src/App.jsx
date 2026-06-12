@@ -39,12 +39,12 @@ function App() {
                 />
 
                 <Route
-                    path="/login"
+                    path="/auth/login"
                     element={<SignIN />}
                 />
 
                 <Route
-                    path="/register"
+                    path="/auth/register"
                     element={<SignUp />}
                 />
             </Routes>

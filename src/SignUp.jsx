@@ -1,87 +1,99 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
-function SignUp() {
+function Signup() {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let msg = await fetch("http://localhost:3000/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+        role,
+      }),
+    });
+    let reply = await msg.json();
+    if (reply.token){
+      localStorage.setItem("token",reply.token);
+    }
+    alert(reply.msg || "Something went wrong");
+};
+
   return (
-    <div
-      style={{
-        width: "350px",
-        margin: "100px auto",
-        padding: "20px",
-        border: "1px solid #ddd",
-        borderRadius: "10px",
-        textAlign: "center",
-      }}
-    >
-      <h1>Sign Up</h1>
+    <form onSubmit={handleSubmit}>
+      <h2>Create your account</h2>
+      <p>Welcome! Please fill in the details to get started.</p>
 
-      <input
-        type="text"
-        placeholder="Enter Username"
-        style={{
-          width: "90%",
-          padding: "10px",
-          margin: "10px 0",
-        }}
-      />
+      <div>
+        <label>Username</label>
+        <br />
+        <input
+          type="text"
+          placeholder="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
 
-      <input
-        type="email"
-        placeholder="Enter Email"
-        style={{
-          width: "90%",
-          padding: "10px",
-          margin: "10px 0",
-        }}
-      />
+      <br />
 
-      <input
-        type="password"
-        placeholder="Enter Password"
-        style={{
-          width: "90%",
-          padding: "10px",
-          margin: "10px 0",
-        }}
-      />
+      <div>
+        <label>Email</label>
+        <br />
+        <input
+          type="email"
+          placeholder="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
 
-      {/* <input
-        type="password"
-        placeholder="Confirm Password"
-        style={{
-          width: "90%",
-          padding: "10px",
-          margin: "10px 0",
-        }}
-      /> */}
+      <br />
 
-      <button
-        style={{
-          width: "100%",
-          padding: "10px",
-          backgroundColor: "red",
-          color: "white",
-          border: "none",
-          cursor: "pointer",
-          marginTop: "10px",
-        }}
-      >
-        Sign Up
-      </button>
-
-      <p style={{ marginTop: "15px" }}>
-        Already have an account?{" "}
-        <Link
-          to="/login"
-          style={{
-            color: "red",
-            textDecoration: "none",
-          }}
+      <div>
+        <label>Role</label>
+        <br />
+        <select
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
         >
-          Sign In
-        </Link>
+          <option value="">Select Role</option>
+          <option value="buyer">Buyer</option>
+          <option value="seller">Seller</option>
+        </select>
+      </div>
+
+      <br />
+
+      <div>
+        <label>Password</label>
+        <br />
+        <input
+          type="password"
+          placeholder="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+
+      <br />
+
+      <button type="submit">Sign Up</button>
+
+      <p>
+        Already have an account? <Link to="/auth/login">Sign In</Link>
       </p>
-    </div>
+    </form>
   );
 }
 
-export default SignUp;
+export default Signup;

@@ -1,67 +1,81 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
-function SignIN() {
+function Login() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(
+        "http://localhost:3000/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            username,
+            password,
+          }),
+        }
+      );
+
+      const reply = await response.json();
+
+      if (reply.token) {
+        localStorage.setItem("token", reply.token);
+      }
+
+      alert(reply.msg || "Login Successful");
+    } catch (error) {
+      console.log(error);
+      alert("Server Error");
+    }
+  };
+
   return (
-    <div
-      style={{
-        width: "350px",
-        margin: "100px auto",
-        padding: "20px",
-        border: "1px solid #ddd",
-        borderRadius: "10px",
-        textAlign: "center",
-      }}
-    >
-      <h1>Sign In</h1>
+    <form onSubmit={handleSubmit}>
+      <h2>Sign In</h2>
 
-      <input
-        type="text"
-        placeholder="Enter Username"
-        style={{
-          width: "90%",
-          padding: "10px",
-          margin: "10px 0",
-        }}
-      />
+      <div>
+        <label>Username</label>
+        <br />
+        <input
+          type="text"
+          placeholder="Enter Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
 
-      <input
-        type="password"
-        placeholder="Enter Password"
-        style={{
-          width: "90%",
-          padding: "10px",
-          margin: "10px 0",
-        }}
-      />
+      <br />
 
-      <button
-        style={{
-          width: "100%",
-          padding: "10px",
-          backgroundColor: "red",
-          color: "white",
-          border: "none",
-          cursor: "pointer",
-          marginTop: "10px",
-        }}
-      >
-        Sign In
-      </button>
+      <div>
+        <label>Password</label>
+        <br />
+        <input
+          type="password"
+          placeholder="Enter Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
 
-      <p style={{ marginTop: "15px" }}>
-        Don't have an account?{" "}
-        <Link
-          to="/register"
-          style={{
-            color: "red",
-            textDecoration: "none",
-          }}
-        >
-          Sign Up
-        </Link>
+      <br />
+
+      <button type="submit">Sign In</button>
+
+      <p>
+        Don't have an account? <Link to="/auth/register">Sign Up</Link>
       </p>
-    </div>
+    </form>
   );
 }
 
-export default SignIN;
+export default Login;
